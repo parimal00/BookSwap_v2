@@ -5594,11 +5594,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ["email", "sendMsgTo", "name"],
   watch: {
     chat: function chat(oldValue, newValue) {
-      console.log('typing'); //       var container = this.$el.querySelector(".modal-body");
+      console.log("typing"); //       var container = this.$el.querySelector(".modal-body");
       // container.scrollTo(0,container.scrollHeight+300)
     }
   },
@@ -5611,13 +5615,12 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log(this.messages);
       var messages = {
-        "message": this.messages,
-        "email": this.email,
-        "name": this.name
+        message: this.messages,
+        email: this.email,
+        name: this.name
       };
       this.chat.messages.push(messages);
       var scroll_bottom = this.$el.querySelector(".scroll_bottom");
-      console.log(scroll_bottom);
       var container = this.$el.querySelector(".modal-body");
       container.scrollTo(0, scroll_bottom.offsetTop);
       axios.post("api/sendMessages", {
@@ -5634,8 +5637,12 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this2 = this;
 
-    console.log('--------------------chattest message----------------');
+    console.log("--------------------chattest message----------------");
     console.log(this.name);
+    axios.get('api/getName/' + this.sendMsgTo).then(function (response) {
+      console.log(response);
+      _this2.friend_name = response.data;
+    });
     axios.post("/api/getPusherPath", {
       email: this.email
     }).then(function (response) {
@@ -5644,14 +5651,22 @@ __webpack_require__.r(__webpack_exports__);
         console.log(element.path);
         Echo.channel("chat." + element.path).listen("ChatEvent", function (e) {
           console.log(e);
+          console.log("waaasupp");
+
+          var scroll_bottom = _this2.$el.querySelector(".scroll_bottom");
+
+          var container = _this2.$el.querySelector(".modal-body");
+
+          console.log(container);
+          container.scrollTo(0, scroll_bottom.offsetTop);
 
           _this2.chat.messages.push({
-            "message": e.message,
-            "email": _this2.sendMsgTo,
-            "name": e.name
+            message: e.message,
+            email: _this2.sendMsgTo,
+            name: e.name
           });
 
-          console.log('*********************chattestcomonent ended**********************');
+          console.log("*********************chattestcomonent ended**********************");
         });
       });
     });
@@ -5662,14 +5677,25 @@ __webpack_require__.r(__webpack_exports__);
     }).then(function (response) {
       console.log(response.data);
       response.data.forEach(function (element) {
-        console.log(element.message);
+        console.log(element);
 
-        _this2.chat.messages.push(element.message);
+        _this2.chat.messages.push({
+          message: element.message,
+          email: element.msg_from,
+          name: element.name
+        }); //to scroll to botoom
+
       });
+
+      var scroll = _this2.$el.querySelector(".scroll");
+
+      console.log(scroll);
+      scroll.scrollTo(0, 100);
     });
   },
   data: function data() {
     return {
+      friend_name: '',
       messages: null,
       chat: {
         messages: []
@@ -7030,7 +7056,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(notification_id);
       console.log(book_id);
       console.log(this.radio);
-      axios.post("/api/acceptReq", {
+      axios.post("/acceptReq", {
         notification_id: notification_id,
         books: this.books_idz,
         radio: this.radio,
@@ -7391,6 +7417,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _UploadBookForm_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UploadBookForm.vue */ "./resources/js/components/UploadBookForm.vue");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -44005,7 +44038,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.my_card[data-v-c4795890]{\n  \n  background-color:yellow;\n}\n.others_card[data-v-c4795890]{\n  background-color: greenyellow;\n}\n.card-container[data-v-c4795890]{\n    max-width:250px;\n    overflow:auto;\n}\n.card[data-v-c4795890]{\n      \n    overflow: auto;\n}\n.card-text[data-v-c4795890]{\n    max-width: 80%;\n}\na.nav-link[data-v-c4795890] {\n        color: gray;\n        font-size: 18px;\n        padding: 0;\n}\n.avatar[data-v-c4795890] {\n        width: 50px;\n        height: 50px;\n        border-radius: 50%;\n        border: 2px solid #e84118;\n        padding: 2px;\n        flex: none;\n}\ninput[data-v-c4795890]:focus {\n        outline: 0px !important;\n        box-shadow: none !important;\n}\n.card-text[data-v-c4795890] {\n        border: 2px solid #ddd;\n        border-radius: 8px;\n}\n.scroll[data-v-c4795890] {\n  margin: 4px, 4px;\n  padding: 4px;\n\n \n\n  width: 100%;\nheight:70vh;\n  /* height: 70vh; */\n  overflow-x: hidden;\n  overflow-y:auto;\n  text-align: justify;\n}\n.modal-dialog[data-v-c4795890] {\n  width: 80%;\n}\n.chat-container[data-v-c4795890] {\n  position: fixed;\n  top: 5px;\n\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.3);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.my_card[data-v-c4795890] {\n  background-color: yellow;\n}\n.others_card[data-v-c4795890] {\n  background-color: greenyellow;\n}\n.card-container[data-v-c4795890] {\n  max-width: 250px;\n  overflow: auto;\n}\n.card[data-v-c4795890] {\n  overflow: auto;\n}\n.card-text[data-v-c4795890] {\n  max-width: 80%;\n}\na.nav-link[data-v-c4795890] {\n  color: gray;\n  font-size: 18px;\n  padding: 0;\n}\n.avatar[data-v-c4795890] {\n  width: 50px;\n  height: 50px;\n  border-radius: 50%;\n  border: 2px solid #e84118;\n  padding: 2px;\n  flex: none;\n}\ninput[data-v-c4795890]:focus {\n  outline: 0px !important;\n  box-shadow: none !important;\n}\n.card-text[data-v-c4795890] {\n  border: 2px solid #ddd;\n  border-radius: 8px;\n}\n.scroll[data-v-c4795890] {\n  margin: 4px, 4px;\n  padding: 4px;\n\n  width: 100%;\n  height: 70vh;\n  /* height: 70vh; */\n  overflow-x: hidden;\n  overflow-y: auto;\n  text-align: justify;\n}\n.modal-dialog[data-v-c4795890] {\n  width: 80%;\n}\n.chat-container[data-v-c4795890] {\n  position: fixed;\n  top: 5px;\n\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.3);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -44222,7 +44255,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nform[data-v-022bc5eb]{\n  max-width: 420px;\n  margin: 30px auto;\n  background: white;\n  text-align: left;\n  padding: 40px;\n  border-radius: 10px\n}\nlabel[data-v-022bc5eb]{\n  color: black;\n  margin: 30px auto;\n  display: inline-block;\n  margin: 25px 0 15px;\n  font-size: 0.8em;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n  font-weight: bold;\n}\n /*\nlabel {\n\n  color: black;\n\n  margin: 30px auto;\n  display: inline-block;\n  margin: 25px 0 15px;\n  font-size: 0.9em;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n  font-weight: bold;\n} */\n.scroll[data-v-022bc5eb] {\n  margin: 4px, 4px;\n  padding: 4px;\n\n  width: 100%;\n\n  height: 70vh;\n  overflow-x: hidden;\n  overflow-y: auto;\n  text-align: justify;\n}\n.modal-dialog[data-v-022bc5eb] {\n  width: 80%;\n}\n.chat-container[data-v-022bc5eb] {\n  position: fixed;\n  top: 5px;\n\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.3);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nform[data-v-022bc5eb]{\n  max-width: 420px;\n  margin: 30px auto;\n  background: white;\n  text-align: left;\n  padding: 40px;\n  border-radius: 10px\n}\nlabel[data-v-022bc5eb]{\n  color: black;\n  margin: 30px auto;\n  display: inline-block;\n  margin: 25px 0 15px;\n  font-size: 0.8em;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n  font-weight: bold;\n}\n /*\nlabel {\n\n  color: black;\n\n  margin: 30px auto;\n  display: inline-block;\n  margin: 25px 0 15px;\n  font-size: 0.9em;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n  font-weight: bold;\n} */\n.scroll[data-v-022bc5eb] {\n  margin: 4px, 4px;\n  padding: 4px;\n\n  width: 100%;\n\n  height: 70vh;\n  overflow-x: hidden;\n  overflow-y: auto;\n  text-align: justify;\n}\n.card[data-v-022bc5eb]{\n  height: 50px;\n  padding:15px;\n}\n.modal-dialog[data-v-022bc5eb] {\n  width: 80%;\n}\n.chat-container[data-v-022bc5eb] {\n  position: fixed;\n  top: 5px;\n\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-color: rgba(0, 0, 0, 0.3);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -73610,7 +73643,9 @@ var render = function () {
     _c("div", { staticClass: "modal-dialog modal-dialog-centered" }, [
       _c("div", { staticClass: "modal-content" }, [
         _c("div", { staticClass: "modal-header" }, [
-          _c("h5", { staticClass: "modal-title" }, [_vm._v(_vm._s(_vm.name))]),
+          _c("h5", { staticClass: "modal-title" }, [
+            _vm._v(_vm._s(_vm.friend_name)),
+          ]),
           _vm._v(" "),
           _c(
             "button",
@@ -73639,13 +73674,7 @@ var render = function () {
                         "div",
                         { staticClass: "d-flex align-items-baseline mb-4" },
                         [
-                          _c("div", [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(message.name) +
-                                ":\n                 "
-                            ),
-                          ]),
+                          _c("div", [_vm._v(_vm._s(message.name) + ":")]),
                           _vm._v(" "),
                           _c("div", { staticClass: "pe-2" }, [
                             _c("div", { staticClass: "card-container" }, [
@@ -73657,8 +73686,9 @@ var render = function () {
                                 },
                                 [
                                   _vm._v(
-                                    _vm._s(message.message) +
-                                      "\n                            "
+                                    "\n                    " +
+                                      _vm._s(message.message) +
+                                      "\n                  "
                                   ),
                                 ]
                               ),
@@ -73675,7 +73705,7 @@ var render = function () {
                         "div",
                         { staticClass: "d-flex align-items-baseline mb-4" },
                         [
-                          _c("div", { staticClass: "position-relative " }, [
+                          _c("div", { staticClass: "position-relative" }, [
                             _c("div", [_vm._v(_vm._s(message.name) + ":")]),
                           ]),
                           _vm._v(" "),
@@ -73685,12 +73715,13 @@ var render = function () {
                                 "div",
                                 {
                                   staticClass:
-                                    "others_card card card-text d-inline-block p-2 px-3 m-1",
+                                    "\n                      others_card\n                      card card-text\n                      d-inline-block\n                      p-2\n                      px-3\n                      m-1\n                    ",
                                 },
                                 [
                                   _vm._v(
-                                    _vm._s(message.message) +
-                                      "\n                            "
+                                    "\n                    " +
+                                      _vm._s(message.message) +
+                                      "\n                  "
                                   ),
                                 ]
                               ),
@@ -73704,9 +73735,11 @@ var render = function () {
                 ])
               }),
               _vm._v(" "),
+              _vm._m(2),
+              _vm._v(" "),
               _c("div", { staticClass: "scroll_bottom" }),
               _vm._v(" "),
-              _vm._m(2),
+              _vm._m(3),
             ],
             2
           ),
@@ -73745,7 +73778,7 @@ var render = function () {
               },
             }),
             _vm._v(" "),
-            _vm._m(3),
+            _vm._m(4),
           ]),
         ]),
       ]),
@@ -73764,6 +73797,20 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", [_c("div", { staticClass: "small" }, [_vm._v("01:10PM")])])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-container" }, [
+      _c("div", { staticStyle: { visibility: "hidden" } }, [
+        _c(
+          "div",
+          { staticClass: "my_card card card-text d-inline-block p-2 px-3 m-1" },
+          [_c("p", [_vm._v("and this is good looking")])]
+        ),
+      ]),
+    ])
   },
   function () {
     var _vm = this
@@ -75917,9 +75964,9 @@ var render = function () {
                     _vm._v(" "),
                     _c("p", { staticClass: "form-control" }, [
                       _vm._v(
-                        "\n                   " +
+                        "\n                    " +
                           _vm._s(_vm.book_name) +
-                          "\n                 "
+                          "\n                  "
                       ),
                     ]),
                     _vm._v(" "),
@@ -75927,9 +75974,9 @@ var render = function () {
                     _vm._v(" "),
                     _c("p", { staticClass: "form-control" }, [
                       _vm._v(
-                        "\n                    " +
+                        "\n                     " +
                           _vm._s(_vm.author_name) +
-                          "\n                 "
+                          "\n                  "
                       ),
                     ]),
                     _vm._v(" "),
@@ -75937,9 +75984,9 @@ var render = function () {
                     _vm._v(" "),
                     _c("p", { staticClass: "form-control" }, [
                       _vm._v(
-                        "\n                   " +
+                        "\n                    " +
                           _vm._s(_vm.description) +
-                          "\n\n                 "
+                          "\n\n                  "
                       ),
                     ]),
                     _vm._v(" "),
@@ -75949,7 +75996,7 @@ var render = function () {
                     _vm._v(" "),
                     _vm._l(_vm.myBook_info, function (myBook) {
                       return _c("div", { key: myBook.books_id }, [
-                        _c("div", { staticClass: "form-control" }, [
+                        _c("div", { staticClass: "card" }, [
                           _c("div", { staticStyle: { display: "flex" } }, [
                             _c("input", {
                               directives: [
@@ -75960,6 +76007,7 @@ var render = function () {
                                   expression: "checkBox",
                                 },
                               ],
+                              staticStyle: { width: "10px" },
                               attrs: { type: "checkbox" },
                               domProps: {
                                 value: myBook.books_id,
@@ -75990,18 +76038,15 @@ var render = function () {
                                 },
                               },
                             }),
+                            _vm._v(" "),
+                            _c("span", [
+                              _vm._v("    " + _vm._s("   " + myBook.book_name)),
+                            ]),
+                            _vm._v(" "),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("br"),
                           ]),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            {
-                              staticStyle: {
-                                width: "50%",
-                                "background-color": "red",
-                              },
-                            },
-                            [_vm._v(_vm._s(myBook.book_name))]
-                          ),
                         ]),
                       ])
                     }),
@@ -76014,16 +76059,16 @@ var render = function () {
                       },
                       [
                         _vm._v(
-                          "\n               send swap request\n             "
+                          "\n                send swap request\n              "
                         ),
                       ]
                     ),
                     _vm._v(
-                      "\n             " +
+                      "\n              " +
                         _vm._s(_vm.formData.req_book_title) +
-                        "\n             " +
+                        "\n              " +
                         _vm._s(_vm.formData.req_book_authors_name) +
-                        "\n           "
+                        "\n            "
                     ),
                   ],
                   2
@@ -76040,7 +76085,7 @@ var render = function () {
               attrs: { type: "button", "data-dismiss": "modal" },
               on: { click: _vm.closeThisModal },
             },
-            [_vm._v("\n           Close\n         ")]
+            [_vm._v("\n            Close\n          ")]
           ),
           _vm._v(" "),
           _c(
@@ -76050,7 +76095,7 @@ var render = function () {
               attrs: { type: "button" },
               on: { click: _vm.sendSwapRequest },
             },
-            [_vm._v("\n           Save changes\n         ")]
+            [_vm._v("\n            Save changes\n          ")]
           ),
         ]),
       ]),

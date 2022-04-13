@@ -51,19 +51,26 @@
               <label>choose your books</label>
 
               <div v-for="myBook in myBook_info" :key="myBook.books_id">
-                <div class="form-control">
-          <div style="display:flex">
-           
+                
+                <div class="card" >
+         
+           <div  style="display:flex">
+             
              <input
+                  style="width:10px"
                   type="checkbox"
                   v-model="checkBox"
                   :value="myBook.books_id"
-                />
-                </div>
+                >
+              
                
-                <p style="width:50%;background-color:red" >{{ myBook.book_name }}</p>
+             <span >    {{'   '+ myBook.book_name }}</span>  
+     
+             <br> <br>
+</div>
+</div>
                 
-                </div>
+                
               </div>
               <button class="btn btn-primary" @click="sendSwapRequest">
                 send swap request
@@ -224,6 +231,10 @@ label {
   overflow-x: hidden;
   overflow-y: auto;
   text-align: justify;
+}
+.card{
+  height: 50px;
+  padding:15px;
 }
 .modal-dialog {
   width: 80%;

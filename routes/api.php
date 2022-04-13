@@ -50,7 +50,7 @@ Route::get('messages',[UploadBookController::class,'getMessages']);
 Route::get('check',[UploadBookController::class,'getMessages']);
 
 
-Route::post('sendMessage',[ChatController::class,'sendMessage']);
+//Route::post('sendMessage',[ChatController::class,'sendMessage']);
 
 Route::get('list_users',[ChatController::class,'list_users']);
 

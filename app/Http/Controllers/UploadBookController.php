@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use App\Models\User;
+
 class UploadBookController extends Controller
 {
   public function search(Request $request)
@@ -53,8 +54,8 @@ class UploadBookController extends Controller
 
     $user = User::where('email', $email)->first();
 
-  
-      
+
+
 
 
     // if (count($user) == 0) {
@@ -203,8 +204,10 @@ class UploadBookController extends Controller
     $send_to = $request->send_to;
     $book_id = $request->book_id;
 
+    $email = Auth::user()->email;
 
-   
+
+
 
 
 
@@ -241,9 +244,7 @@ class UploadBookController extends Controller
       ->update([
         "display" => 0
       ]);
-    // foreach($books as $book){
-    //   echo $book->book_name;
-    // }
+  
 
 
     DB::table('notification')
@@ -253,6 +254,52 @@ class UploadBookController extends Controller
           "status" => 1
         ]
       );
+
+
+
+    $user_id = DB::table('users')
+      ->where('email', $email)
+      ->select('id')
+      ->first();
+
+
+
+    $friend_id = DB::table('users')
+      ->where('email', $send_to)
+      ->select('id')
+      ->first();
+
+
+
+
+
+    $friend = DB::table('friends')
+      ->where([
+        'users' => $user_id->id,
+        'friends' => $send_to
+      ])
+      ->orWhere([
+        'users' => $send_to,
+        'friends' => $user_id->id
+      ])
+      ->first();
+
+  
+     
+
+    if ($friend == null) {
+      DB::table('friends')
+        ->insert([
+          'users' => $user_id->id,
+          'friends' => $friend_id->id
+        ]);
+
+        DB::table('friends')
+        ->insert([
+          'users' =>$friend_id->id,
+          'friends' => $user_id->id
+        ]);
+    }
   }
   function viewBooks(Request $request)
   {
@@ -303,16 +350,16 @@ class UploadBookController extends Controller
   function uploadBooks(Request $request)
   {
 
-    $email=Auth::user()->email;
-    if($email==null){
+    $email = Auth::user()->email;
+    if ($email == null) {
       return response("please login to upload this book");
     }
     $rules = [
-     
-     
+
+
       "bookTitle" => 'required',
       "bookAuthor" => 'required',
-      "description"=>'required',
+      "description" => 'required',
 
     ];
     $validator = Validator::make($request->all(), $rules);
@@ -357,7 +404,7 @@ class UploadBookController extends Controller
     $latitude = $request->latitude;
 
     $longitude = $request->longitude;
-    
+
 
     $users = DB::table('users')
       ->where('email', $email)
@@ -372,11 +419,11 @@ class UploadBookController extends Controller
     //       "longitude" => $longitude
     //     ]);
 
-  
+
     // }
 
-    
-  
+
+
 
     return DB::table('books')
       ->insert([

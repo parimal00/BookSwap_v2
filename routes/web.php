@@ -25,6 +25,17 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//-----------------------------------notifications--------------
+
+
+Route::post('acceptReq',[UploadBookController::class,'acceptReq']);
+
+
+
+//-----------------------------------notifications ended-----------
+
+
+
 //-----------------BookSwapForm------------
 
 Route::post('postBook',[UploadBookController::class,'uploadBooks']);

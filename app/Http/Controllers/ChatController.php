@@ -61,7 +61,7 @@ class ChatController extends Controller
         event(new ChatEvent($sendMsgTo, $msg_from, $message, $path,$name));
         // event(new ChatEvent('hello','waaa','jack'));
 
-        return $request->name;
+       
 
         return DB::table('messages')
             ->insert(
@@ -101,6 +101,8 @@ class ChatController extends Controller
                 ['msg_from', '=', $sendMsgTo],
                 ['msg_to', '=', $email]
             ])
+            ->join('users','users.email','messages.msg_from')
+            ->select('msg_from','msg_to','message','name')
             ->get();
     }
 }

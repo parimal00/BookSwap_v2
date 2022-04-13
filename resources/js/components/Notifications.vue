@@ -335,7 +335,7 @@ export default {
       console.log(this.radio);
 
       axios
-        .post("/api/acceptReq", {
+        .post("/acceptReq", {
           notification_id: notification_id,
           books: this.books_idz,
           radio: this.radio,
