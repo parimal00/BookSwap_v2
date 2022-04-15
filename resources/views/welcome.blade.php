@@ -24,7 +24,7 @@
     </head>
     <body class="antialiased">
       
-        {{$email}}
+       
 
         @if(Auth::user()==null)
         <div id="app">

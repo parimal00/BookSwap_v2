@@ -6,7 +6,7 @@
           <h5 class="modal-title">Modal title</h5>
           <button
             type="button"
-            class="close"
+            class="btn-close"
             data-dismiss="modal"
             aria-label="Close"
              @click="closethisModal"
@@ -86,7 +86,7 @@ export default {
      this.name=response.data
    })
     console.log(this.email);
-    axios.get("/api/list_users/").then((response) => {
+    axios.get("/list_users").then((response) => {
       console.log(response.data);
       response.data.forEach((element) => {
         console.log(element.email);

@@ -27,17 +27,16 @@
               <li class="nav-item" @click="notificationClickHandlar">
                 <a class="nav-link" href="#">Notifications</a>
               </li>
-              <li class="nav-item" @click="messagesClickHandlar" >
-                <a class="nav-link"  href="#">Chat</a>
+              <li class="nav-item" @click="messagesClickHandlar">
+                <a class="nav-link" href="#">Chat</a>
               </li>
-               <li class="nav-item" @click="profileClickHandlar" >
-                <a class="nav-link"  href="#">Profile</a>
+              <li class="nav-item" @click="profileClickHandlar">
+                <a class="nav-link" href="#">Profile</a>
               </li>
             </ul>
             <div class="d-flex">
               <input
                 class="form-control me-2"
-             
                 placeholder="Search"
                 aria-label="Search"
                 v-model="searchedData"
@@ -45,11 +44,11 @@
               <!-- <button @click="search" class="btn btn-outline-success" type="submit">
                 Search
               </button> -->
-             
-              </div>
-               <button @click="search" class="btn btn-outline-success">click here</button>
-              <button ><a href="logout">logout</a></button>
-            
+            </div>
+            <button @click="search" class="btn btn-outline-success">
+              click here
+            </button>
+            <button><a href="logout">logout</a></button>
           </div>
         </div>
       </nav>
@@ -73,30 +72,44 @@
       </ul> -->
     </div>
     <div v-if="locationFetched && !searchStatus">
-      <DisplayBooks :email="email" :latitude="latitude" :longitude="longitude" :searchedData="searchedData" :searchStatus="searchStatus"/>
-      </div>
-    
+      <DisplayBooks
+        :email="email"
+        :latitude="latitude"
+        :longitude="longitude"
+        :searchedData="searchedData"
+        :searchStatus="searchStatus"
+      />
+    </div>
 
-       <div v-if="locationFetched && searchStatus">
-      <searchComponent :email="email" :latitude="latitude" :longitude="longitude" :searchedData="searchedData" :searchStatus="searchStatus" :key="componentKey"/>
-      </div>
-   
+    <div v-if="locationFetched && searchStatus">
+      <searchComponent
+        :email="email"
+        :latitude="latitude"
+        :longitude="longitude"
+        :searchedData="searchedData"
+        :searchStatus="searchStatus"
+        :key="componentKey"
+      />
+    </div>
 
     <div v-if="messageStatus">
-      <ChatComponent :email="email" @closeModal="messagesClickHandlar"/>
+      <ChatComponent :email="email" @closeModal="messagesClickHandlar" />
     </div>
-
 
     <div v-if="loginComponentStatus">
-         <LoginComponent/>
+      <LoginComponent />
     </div>
-<div v-if="profileStatus" >
-  <Profile @closeProfile="closeProfile"/>
-</div>
- 
+    <div v-if="profileStatus">
+      <Profile @closeProfile="closeProfile" />
+    </div>
 
     <div v-if="showUploadBookForm">
-      <UploadBookForm :email="email" :latitude="latitude" :longitude="longitude" @closeModal="uploadBookClickHandlar" />
+      <UploadBookForm
+        :email="email"
+        :latitude="latitude"
+        :longitude="longitude"
+        @closeModal="uploadBookClickHandlar"
+      />
     </div>
 
     <div v-if="notificationStatus">
@@ -106,101 +119,128 @@
 </template>
 
 <script>
-import ChatTestComponent from './ChatTestComponent.vue'
+import ChatTestComponent from "./ChatTestComponent.vue";
 import DisplayBooks from "./DisplayBooks.vue";
 import UploadBookForm from "./UploadBookForm.vue";
 import Notifications from "./Notifications.vue";
 import Messages from "./Messages.vue";
 import ChatComponent from "./ChatComponent.vue";
 import LoginComponent from "./LoginComponent.vue";
-import searchComponent from './searchComponent.vue';
-import Profile from './Profile.vue'
+import searchComponent from "./searchComponent.vue";
+import Profile from "./Profile.vue";
 export default {
-  components: {Profile,ChatTestComponent,searchComponent,LoginComponent, DisplayBooks,ChatComponent,UploadBookForm, Notifications, Messages },
+  components: {
+    Profile,
+    ChatTestComponent,
+    searchComponent,
+    LoginComponent,
+    DisplayBooks,
+    ChatComponent,
+    UploadBookForm,
+    Notifications,
+    Messages,
+  },
   props: ["email"],
 
-   data() {
+  data() {
     return {
-      latitude:null,
-      longitude:null,
-      locationFetched:false,
+      latitude: null,
+      longitude: null,
+      locationFetched: false,
       showUploadBookForm: false,
       notificationStatus: false,
       messageStatus: false,
-      loginComponentStatus:false,
-      searchedData:null,
-      searchStatus:false,
-      componentKey:0,
-      profileStatus:false
+      loginComponentStatus: false,
+      searchedData: null,
+      searchStatus: false,
+      componentKey: 0,
+      profileStatus: false,
     };
   },
   methods: {
-    closeProfile(){
+    closeProfile() {
       this.profileStatus = false;
-
     },
-    profileClickHandlar(){
+    profileClickHandlar() {
       this.profileStatus = true;
     },
-    search(){
-        this.searchStatus = true;
-        this.componentKey=!this.componentKey;
-       
+    search() {
+      this.searchStatus = true;
+      this.componentKey = !this.componentKey;
     },
     uploadBookClickHandlar() {
       this.showUploadBookForm = !this.showUploadBookForm;
       console.log("waaaa");
     },
     notificationClickHandlar() {
-      if(this.email == "no_email"){
-        this.loginComponentStatus=!this.loginComponentStatus
-      }
-      else{
-      this.notificationStatus = !this.notificationStatus;
+      if (this.email == "no_email") {
+        this.loginComponentStatus = !this.loginComponentStatus;
+      } else {
+        this.notificationStatus = !this.notificationStatus;
       }
       console.log("clicked");
     },
     messagesClickHandlar() {
-      if(this.email=="no_email"){
-        this.loginComponentStatus=!this.loginComponentStatus
-      }
-      else{
-      this.messageStatus = !this.messageStatus;
+      if (this.email == "no_email") {
+        this.loginComponentStatus = !this.loginComponentStatus;
+      } else {
+        this.messageStatus = !this.messageStatus;
       }
     },
+    getLocation(){
+       if (!("geolocation" in navigator)) {
+      console.log("you much turn of the location");
+      return;
+    } else {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        this.latitude = pos.coords.latitude;
+        this.longitude = pos.coords.longitude;
+
+        this.locationFetched = true;
+
+        axios
+          .post("api/updateLocation", {
+            longitude: this.longitude,
+            latitude: this.latitude,
+            email: this.email,
+          })
+          .then((response) => {});
+      },(error)=>{
+        console.log(error)
+        alert("You must turn on your location to view the books nearest to you!")
+        this.getLocation()
+      })
+      
+    }
+    }
   },
 
   mounted() {
-    console.log(this.email);
-      if(!("geolocation" in navigator)) {
-     alert('You must turn on your location')
-     return;
-    }
- 
-  else{
-    
-    navigator.geolocation.getCurrentPosition(pos => {
-      this.latitude = pos.coords.latitude
-      this.longitude = pos.coords.longitude
-      console.log(this.latitude)
-      console.log(this.longitude)
-      console.log(this.email)
-      this.locationFetched = true;
-      axios.post('api/updateLocation',{
-        longitude:this.longitude,
-        latitude: this.latitude,
-        email:this.email
-      })
-      .then((response)=>{
-        console.log(response)
+    //   console.log(this.email);
+    if (!("geolocation" in navigator)) {
+      console.log("you much turn of the location");
+      return;
+    } else {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        this.latitude = pos.coords.latitude;
+        this.longitude = pos.coords.longitude;
+
+        this.locationFetched = true;
+
+        axios
+          .post("api/updateLocation", {
+            longitude: this.longitude,
+            latitude: this.latitude,
+            email: this.email,
+          })
+          .then((response) => {});
+      },(error)=>{
+        console.log(error)
+        alert("You must turn on your location to view the books nearest to you!Press F5 to refresh the page")
+        
       })
       
-
-    
-    // }, err => {
-    
-     })
-  }
+    }
   },
 };
 </script>

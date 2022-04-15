@@ -9,6 +9,7 @@ use App\Http\Controllers\UploadBookController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Http\Controllers\ChatController;
 
 
 
@@ -25,10 +26,19 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+//--------------------------chat-------------------
+
+
+Route::get('list_users',[ChatController::class,'list_users']);
+
+
+//-------------------------chat ended---------------
 //-----------------------------------notifications--------------
 
 
 Route::post('acceptReq',[UploadBookController::class,'acceptReq']);
+Route::post('acceptSingleReq',[UploadBookController::class,'acceptSingleReq']);
 
 
 

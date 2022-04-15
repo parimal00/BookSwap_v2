@@ -109,10 +109,25 @@ function updateBook($id,Request $request){
         if($email==null){
             return "please login to view profile";
         }
+
+                    $books=DB::table('books')
+                        ->where('email',$email)
+                        ->get();
+
+        if(count($books)==0){
+            
+          return DB::table('users')
+          ->select('name','email','latitude','longitude')
+            ->where('users.email',$email)
+            ->get();
+        }
+
         $user = DB::table('users')
         ->where('users.email',$email)
         ->join('books','books.email','users.email')
         ->get();
+
+
 
         return $user;
     }        

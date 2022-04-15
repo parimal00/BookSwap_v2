@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Events\ChatEvent;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -78,8 +79,15 @@ class ChatController extends Controller
 
     function list_users()
     {
-       
-        return DB::table('users')
+      
+       $user_id = Auth::user()->id;
+
+     
+      
+        return DB::table('friends')
+        ->where('users',$user_id)
+        ->select('email','name',)
+        ->join('users','users.id','friends.friends')
             ->get();
     }
 

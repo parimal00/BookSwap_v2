@@ -176,6 +176,46 @@ class UploadBookController extends Controller
     $sender_book_id = $request->sender_book_id;
 
 
+    $user_id=Auth::user()->id;
+
+   
+   $friend= DB::table('friends')
+    ->where([
+      'users'=>$user_id,
+      'friends'=>$send_to
+    ])
+    ->orWhere([
+      'users'=>$send_to,
+      'friends'=>$user_id
+    ])->first();
+
+   
+   
+   $friend_id= DB::table('users')
+    ->where('email',$send_to)
+    ->select('id')
+    ->first()
+    
+    ;
+
+
+    if($friend==null){
+      DB::table('friends')
+      ->insert([
+        'users'=>$user_id,
+        'friends'=>$friend_id->id
+      ]);
+      DB::table('friends')
+      ->insert([
+        'users'=>$friend_id->id,
+        'friends'=>$user_id
+      ]);
+    }
+
+
+   
+
+
     DB::table('notification')
       ->where('notification_id', $notification_id)
       ->update([

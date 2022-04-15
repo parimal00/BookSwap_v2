@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="profileContainer">
-      <div class="modal-dialog">
+      <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Profile</h5>
@@ -31,8 +31,9 @@
               <br />
 
               <Label>My Books:</Label>
-
-              <div v-for="(books, index) in myBooks" :key="books.books_id">
+              
+              <div v-if="myBooks.books_id">
+              <div  v-for="(books, index) in myBooks" :key="books.books_id">
                 {{ index }}
                 <div class="card" :class="{ opacity: books.display === 0 }">
                   <svg
@@ -90,6 +91,7 @@
                 <br />
                 <br />
               </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -109,10 +111,10 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              @click="closeProfile"
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Send message</button>
           </div>
         </div>
       </div>
@@ -279,6 +281,8 @@ export default {
         console.log(this.email);
         console.log(response.data[0].latitude);
         console.log(this.latitude);
+
+        
 
         this.myBooks = response.data;
       });

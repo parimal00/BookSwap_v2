@@ -21,63 +21,57 @@
               <label>Upload book first before sending request</label>
               <label>Click below To upload book</label><br />
               <button @click="uploadBookFormClickHandler">Upload Book</button>
+              
             </div>
-
+            <div v-else>
             <form v-if="myBook_info.length" @submit.prevent method="GET">
               <input type="hidden" name="book_id" value="id" />
-              <input type="text" name="user_id" v-model="userIdToSend" /><br />
+              <input type="hidden" name="user_id" v-model="userIdToSend" /><br />
               <div class="img-card">
                 <img :src="'/uploads/' + this.book_image" />
               </div>
               <Label>Book Title:</Label>
-              
-                  <p class="form-control">
-                    {{book_name}}
-                  </p>
 
- <Label>Author Name:</Label>
-              
-                  <p class="form-control">
-                     {{author_name}}
-                  </p>
-                   <Label>Description:</Label>
-              
-                  <p class="form-control">
-                    {{description}}
+              <p class="form-control">
+                {{ book_name }}
+              </p>
 
-                  </p>
-                
-            <br>
+              <Label>Author Name:</Label>
+
+              <p class="form-control">
+                {{ author_name }}
+              </p>
+              <Label>Description:</Label>
+
+              <p class="form-control">
+                {{ description }}
+              </p>
+
+              <br />
               <label>choose your books</label>
 
               <div v-for="myBook in myBook_info" :key="myBook.books_id">
-                
-                <div class="card" >
-         
-           <div  style="display:flex">
-             
-             <input
-                  style="width:10px"
-                  type="checkbox"
-                  v-model="checkBox"
-                  :value="myBook.books_id"
-                >
-              
-               
-             <span >    {{'   '+ myBook.book_name }}</span>  
-     
-             <br> <br>
-</div>
-</div>
-                
-                
+                <div class="card">
+                  <div style="display: flex;align-items:center">
+                    <input
+                      style="width: 20px"
+                      type="checkbox"
+                      v-model="checkBox"
+                      :value="myBook.books_id"
+                    />
+
+                    <span> {{ "   " + myBook.book_name }}</span>
+
+                   
+                  </div>
+                </div>
               </div>
-              <button class="btn btn-primary" @click="sendSwapRequest">
+              <!-- <button class="btn btn-primary" @click="sendSwapRequest">
                 send swap request
-              </button>
-              {{ formData.req_book_title }}
-              {{ formData.req_book_authors_name }}
+              </button> -->
+             
             </form>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -89,13 +83,17 @@
           >
             Close
           </button>
+           <div v-if="myBook_info.length">
           <button
+         
             @click="sendSwapRequest"
             type="button"
             class="btn btn-primary"
           >
-            Save changes
+            Send Swap Request
           </button>
+          </div>
+        
         </div>
       </div>
     </div>
@@ -124,7 +122,15 @@
 <script>
 import UploadBookForm from "./UploadBookForm.vue";
 export default {
-  props: ["id","book_name","author_name","description", "userIdToSend", "email", "book_image"],
+  props: [
+    "id",
+    "book_name",
+    "author_name",
+    "description",
+    "userIdToSend",
+    "email",
+    "book_image",
+  ],
   components: { UploadBookForm },
   data() {
     return {
@@ -188,17 +194,16 @@ export default {
 </script>
 
 <style scoped>
-
-form{
+form {
   max-width: 420px;
   margin: 30px auto;
   background: white;
   text-align: left;
   padding: 40px;
-  border-radius: 10px
+  border-radius: 10px;
 }
 
-label{
+label {
   color: black;
   margin: 30px auto;
   display: inline-block;
@@ -207,8 +212,8 @@ label{
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: bold;
- }
- /*
+}
+/*
 label {
 
   color: black;
@@ -232,9 +237,9 @@ label {
   overflow-y: auto;
   text-align: justify;
 }
-.card{
+.card {
   height: 50px;
-  padding:15px;
+  padding: 15px;
 }
 .modal-dialog {
   width: 80%;

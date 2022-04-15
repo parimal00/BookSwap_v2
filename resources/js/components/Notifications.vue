@@ -64,20 +64,18 @@
                           Reject
                         </Button>
                         <Button
-                        class="btn btn-primary"
-                        @click="
-                          openNotificationDetails(
-                            notification.books,
-                            notification.send_from,
-                            notification.notification_id,
-                            notification.book_id
-                          )
-                        "
-                      
-                     
-                      >
-                        View Details
-                      </Button>
+                          class="btn btn-primary"
+                          @click="
+                            openNotificationDetails(
+                              notification.books,
+                              notification.send_from,
+                              notification.notification_id,
+                              notification.book_id
+                            )
+                          "
+                        >
+                          View Details
+                        </Button>
                       </div>
                     </div>
                     <div v-if="notification.send_from == email">
@@ -144,8 +142,6 @@
                             notification.book_id
                           )
                         "
-                      
-                     
                       >
                         View Details
                       </Button>
@@ -156,7 +152,10 @@
                   </div>
                 </div>
                 <div v-if="notification.status === 1">
-                  <div @click="chat(notification.send_from)"  v-if="notification.send_to == email">
+                  <div
+                    @click="chat(notification.send_from)"
+                    v-if="notification.send_to == email"
+                  >
                     {{ notification.send_from }} has accepted your request with
                     <div
                       v-for="acc_book in notification.acc_book"
@@ -165,7 +164,10 @@
                       {{ acc_book.book_name }}
                     </div>
                   </div>
-                  <div @click="chat(notification.send_to)" v-if="notification.send_from == email">
+                  <div
+                    @click="chat(notification.send_to)"
+                    v-if="notification.send_from == email"
+                  >
                     You have accepted the request from
                     {{ notification.send_to }}
                   </div>
@@ -186,6 +188,12 @@
               </div>
             </div>
           </div>
+          <div v-if="acceptSingleRequestStatus">
+            <DialogModal @closeDialogModal="closeDialogModal" message="Are you sure you want to accept the request?"/>
+          </div>
+          <div v-if="reject.dialogModalStatus">
+            <DialogModal @closeDialogModal="rejReq" message="Are you sure you want to reject this book?"/>
+          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="closeModal">
               Close
@@ -200,8 +208,7 @@
         :books="notificationDetails.books"
         :book_id="notificationDetails.book_id"
         :send_from="notificationDetails.send_from"
-
-         @accepted="acceptReq"
+        @accepted="acceptReq"
       />
     </div>
   </div>
@@ -209,11 +216,27 @@
 
 <script>
 import NotificationDetails from "./NotificationDetails.vue";
-
+import DialogModal from './DialogModal.vue'
 export default {
-  components: { NotificationDetails },
+  components: { DialogModal,NotificationDetails },
   data() {
     return {
+
+      reject:{
+        dialogModalStatus:false,
+        books_idz:[],
+        notification_id:'',
+        send_to:'',
+        send_from:''
+      },
+      acceptSingleRequestStatus:false,
+      asr:{
+        notification_id:'',
+        send_from:'',
+        send_to:'',
+        book_id:'',
+        sender_book_id:'',
+      },
       notificationDetails: {
         books: [],
         send_from: "",
@@ -235,20 +258,18 @@ export default {
 
   props: ["email"],
   methods: {
-    chat(user){
-      console.log(user)
+    chat(user) {
+      console.log(user);
     },
-        acceptReq(radio,status) {
+    acceptReq(radio, status) {
+      if (status != true) {
+        this.notificationDetailsStatus = false;
+        return;
+      }
 
-          if(status!=true){
-                this.notificationDetailsStatus=false
-                return
-          }
+      this.notificationDetailsStatus = false;
+      console.log("the radio is " + radio);
 
-          this.notificationDetailsStatus=false
-          console.log("the radio is "+radio)
-        
-         
       this.notificationDetails.books.forEach((element) => {
         this.books_idz.push(element.books_id);
       });
@@ -256,9 +277,8 @@ export default {
       this.books_idz.forEach((element) => {
         console.log(element);
       });
-     this.radio=radio
+      this.radio = radio;
 
-    
       console.log(this.radio);
 
       axios
@@ -284,27 +304,48 @@ export default {
       this.notificationDetails.book_id = book_id;
       this.notificationDetailsStatus = true;
     },
-    acceptSingleRequest(send_from, notification_id, books, book_id) {
-      console.log(send_from);
-      console.log(notification_id);
-      console.log(books);
-      console.log(book_id);
-      books.forEach((element) => {
-        this.sender_book_id = element.books_id;
-      });
-      console.log(this.sender_book_id);
-      axios
-        .post("/api/acceptSingleReq", {
-          notification_id: notification_id,
+    closeDialogModal(status){
+      this.acceptSingleRequestStatus=false
+      if(status==true){
+         this.acrz()
+      }
+     
+    },
+    acrz(){
+      console.log('accepetd')
+       axios
+        .post("/acceptSingleReq", {
+          notification_id: this.asr.notification_id,
           send_from: this.email,
-          send_to: send_from,
-          book_id: book_id,
-          sender_book_id: this.sender_book_id,
+          send_to: this.asr.send_to,
+          book_id: this.asr.book_id,
+          sender_book_id: this.asr.sender_book_id,
         })
         .then((response) => {
           console.log(response);
           this.loadNotifComponent();
         });
+    },
+    acceptSingleRequest(send_from, notification_id, books, book_id) {
+      books.forEach((element) => {
+        this.sender_book_id = element.books_id;
+      });
+
+      console.log(this.email)
+
+      this.asr.notification_id = notification_id;
+      this.asr.send_from = this.email;
+      this.asr.send_to = send_from;
+      this.asr.book_id = book_id;
+      (this.asr.sender_book_id = this.sender_book_id),
+        books.forEach((element) => {
+          this.sender_book_id = element.books_id;
+        });
+
+        this.acceptSingleRequestStatus=true
+        return
+
+     
     },
     loadNotifComponent() {
       axios.post("/api/view_notification", this.formData).then((response) => {
@@ -348,13 +389,41 @@ export default {
           this.loadNotifComponent();
         });
     },
+    rejReq(status){
+        console.log('api'+status)
+        this.reject.dialogModalStatus=false
+       if(status==false){
+        
+        return
+       }
+       
+       
+         axios
+        .post("/api/rejectReq", {
+          notification_id: this.reject.notification_id,
+          books: this.reject.books_idz,
+          send_to: this.reject.send_from,
+          send_from: this.email,
+        })
+        .then((response) => {
+          console.log(response);
+          this.loadNotifComponent();
+        });
+    },
     rejectReqHandlar(send_from, notification_id, books) {
       console.log("rejected");
 
       books.forEach((element) => {
         this.books_idz.push(element.books_id);
       });
-
+      
+      this.reject.books_idz=this.books_idz
+      this.reject.notification_id=notification_id
+      this.reject.send_to=send_from
+      this.reject.send_from=this.email
+      console.log(this.reject)
+      this.reject.dialogModalStatus=true
+      return
       axios
         .post("/api/rejectReq", {
           notification_id: notification_id,

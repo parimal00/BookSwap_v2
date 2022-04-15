@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Modal title</h5>
-        <button type="button" @click="closeModal" class="close" aria-label="Close">
+        <button type="button" @click="no" class="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

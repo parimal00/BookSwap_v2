@@ -46,7 +46,9 @@
         </div>
       </div>
     </section>
-
+  <!-- <div style="background-color:green;position:fixed; top:85vh;left:10%;">
+    <span class="badge bg-success">Request sent successfully!!!!!</span>
+  </div> -->
     <!-- <div class="thisPage">
       <div v-for="book in books" :key="book.id">
         {{ book.image_path }}
@@ -74,8 +76,7 @@
         <SwapBookForm :id="id" :userIdToSend="userIdToSend" :email="email" />
       </div>
     </div> -->
-    {{ searchedData }}
-    {{ searchStatus }}
+  
     <div v-if="show">
       <SwapBookForm
         :id="id"
